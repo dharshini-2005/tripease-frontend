@@ -1,0 +1,819 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: Arial, sans-serif;
+  
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  color: white;
+  position: relative;
+  background-image: url("src/beaachImage.avif");
+  background-size: cover;
+  background-position: center;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: bold;
+  margin-top:0%;
+  margin-bottom: 30px;
+  z-index: 1;
+  padding-top:0%;
+}
+
+.slogan {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+.login {
+  font-size: 2rem;
+  margin-bottom: 30px;
+  z-index: 1;
+}
+
+.form-elements {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.form-elements div {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+label {
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  text-align: left;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+}
+
+input:focus {
+  outline: none;
+  border-color: grey;
+}
+
+.login-button {
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #28231D;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  height:20%;
+  margin-top: 15px;
+}
+
+.login-button:hover {
+  background-color:#000000;
+}
+.buttons{
+  
+  color:white;
+ 
+
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  color: white;
+  padding-top: 5rem;
+}
+
+.options h1 {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-bottom: 4rem;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.buttons {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 3rem; /* Adds space between the buttons on the X-axis */
+  flex-wrap: wrap; 
+  padding:5%/* Allows buttons to wrap to the next line if needed */
+}
+
+.first-two, .second-two {
+  display: flex;
+  justify-content: center; /* Aligns buttons horizontally */
+  gap: 5rem; /* Adds space between the buttons */
+}
+
+button {
+  padding-top:0% ;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 3rem;
+  cursor: pointer;
+  box-shadow: 0 6px 10px rgba(30, 73, 158, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 300px; /* Set width to 500px */
+  height: 200px; 
+  background-color:white;/* Set height to 400px */
+}
+
+button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(30, 73, 158, 0.2);
+  background-color:lightslategray
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 4px 8px rgba(30, 73, 158, 0.2);
+}
+
+.options h1{
+  color:white;
+  text-align:center;
+  padding-top:0%;
+  font-size:4rem;
+
+}
+.options{
+  background-image:"jeepimage.jpg";
+  background-size: cover;
+  background-position: center;
+}
+
+
+
+
+
+
+/* General styles */
+
+.checklist-container {
+max-width: 600px;
+margin: 40px auto;
+padding: 20px;
+background-color: #ffffff;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+border-radius: 12px;
+margin-top:0px;
+}
+
+/* Title */
+.checklist-title {
+font-size: 24px;
+font-weight: bold;
+text-align: center;
+margin-bottom: 20px;
+color:black;
+}
+
+/* Input section */
+.location-section,
+.add-item-form {
+display: flex;
+flex-direction: column;
+margin-bottom: 15px;
+}
+
+label {
+font-size: 14px;
+font-weight: bold;
+margin-bottom: 5px;
+color: #555;
+}
+
+input[type="text"] {
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 6px;
+font-size: 14px;
+width: 100%;
+outline: none;
+transition: border-color 0.2s;
+}
+
+input[type="text"]:focus {
+border-color: #4CAF50;
+}
+
+.add-button {
+margin-top: 10px;
+padding: 10px;
+background-color: grey;
+color: white;
+border: none;
+border-radius: 6px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.3s;
+height:30px;
+}
+
+.add-button:hover {
+background-color: black;
+}
+
+/* Checklist section */
+.checklist {
+margin-top: 20px;
+}
+
+.checklist h3 {
+font-size: 20px;
+font-weight: bold;
+margin-bottom: 10px;
+color: #333;         
+}
+
+.location-group {
+margin-bottom: 20px;
+padding: 10px;
+border: 1px solid #eee;
+border-radius: 8px;
+background-color: #fafafa;
+}
+
+.location-group h4 {
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 10px;
+color: black;
+}
+
+ul {
+list-style-type: none;
+padding: 0;
+}
+
+li {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 8px;
+font-size: 14px;
+color: #555;
+padding: 8px;
+border: 1px solid #ddd;
+border-radius: 6px;
+background-color: #ffffff;
+transition: transform 0.2s;
+}
+
+li:hover {
+transform: translateX(5px);
+}
+
+.remove-button {
+padding: 5px 10px;
+font-size: 12px;
+background-color: #ff6b6b;
+color: white;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+height:30px;
+transition: background-color 0.3s;
+width:auto
+
+}
+
+.remove-button:hover {
+background-color: #ff4c4c;
+}
+
+/* Empty message */
+.checklist p {
+font-size: 14px;
+color: #777;
+text-align: center;
+margin-top: 20px;
+}
+
+
+
+
+/* Body Styles */
+body {
+font-family: 'Helvetica', 'Arial', sans-serif;
+background-color: #f5f5f5;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+/* Main container for the form */
+.plan-container {
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+padding: 30px;
+width: 500px;
+box-sizing: border-box;
+text-align: center;
+}
+
+/* Heading for the form */
+.plan-heading {
+font-size: 24px;
+color: #333;
+margin-bottom: 20px;
+font-weight: 600;
+}
+
+/* Form Styles */
+.form-group {
+display: flex;
+flex-direction: column;
+gap: 15px;
+text-align: left;
+}
+
+.form-label {
+font-size: 16px;
+color: #555;
+}
+
+.form-input {
+padding: 12px;
+font-size: 14px;
+border: 1px solid #ccc;
+border-radius: 5px;
+outline: none;
+width: 100%;
+box-sizing: border-box;
+transition: all 0.3s ease;
+}
+
+.form-input:focus {
+border-color: #3498db;
+box-shadow: 0 0 8px rgba(52, 152, 219, 0.4);
+}
+
+.submit-btn {
+padding: 12px;
+background-color: grey;
+color: white;
+border: none;
+border-radius: 5px;
+font-size: 16px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+background-color: black;
+}
+
+/* Created Travel Plans List */
+.created-plans-heading {
+margin-top: 30px;
+font-size: 20px;
+color: #333;
+font-weight: 600;
+}
+
+.plans-list {
+padding-left: 20px;
+list-style-type: none;
+margin: 0;
+text-align: left;
+}
+
+.plan-item {
+padding: 12px 0;
+border-bottom: 1px solid #ddd;
+font-size: 14px;
+}
+
+.plan-item:last-child {
+border-bottom: none;
+}
+
+.plan-item strong {
+font-weight: bold;
+color: #3498db;
+}
+
+
+.submit-button{
+color:white;
+background-color:grey;
+height:50px;
+width:px;
+border-radius:0;
+text-align:center;
+display:flex;
+justify-content:center;
+align-items: center;
+
+
+
+
+}
+
+.submit-place{
+display:flex;
+justify-content: center;
+align-items: center;
+margin:5%;
+
+
+}
+.plan{
+color:white;
+text-align: center;
+padding:5%;
+font-size:3rem;
+}
+
+.source-btn{
+width:30%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin-left:37%
+
+}
+
+.date-btn{
+width:30%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin-left:37%
+
+
+
+}
+
+.destination-btn{
+width:30%;
+display:flex;
+justify-content:center;
+align-items:center;
+margin-left:37%
+}
+
+.plan-created{
+height:50px;
+width:40%;
+margin-left:3%;
+background-color:grey;
+border-radius: 0%;
+
+}
+
+
+
+
+/* General container styling */
+.budget-container {
+max-width: 600px;
+margin: 30px auto;
+
+background-color: #f9f9f9;
+border: 1px solid #ddd;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+font-family: 'Arial', sans-serif;
+
+
+}
+
+/* Title styling */
+.title {
+font-size: 24px;
+font-weight: bold;
+margin-bottom: 20px;
+text-align: center;
+color: #333;
+}
+
+/* Location section styling */
+.location-section,
+.total-budget-section {
+margin-bottom: 15px;
+}
+
+label {
+font-weight: bold;
+color: #555;
+display: block;
+margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"] {
+width: 100%;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 5px;
+font-size: 14px;
+margin-bottom: 10px;
+transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+border-color: #007bff;
+outline: none;
+box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+/* Add expense form styling */
+.add-expense-form {
+margin-top: 20px;
+margin-bottom: 30px;
+}
+
+.add-expense-form label {
+margin-bottom: 8px;
+}
+
+.add-expense-form button {
+display: inline-block;
+background-color: grey;
+color: white;
+font-size: 16px;
+font-weight: bold;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease;
+}
+
+
+
+/* Budget summary styling */
+.budget-summary {
+margin-bottom: 30px;
+padding: 15px;
+background-color: #f0f8ff;
+border: 1px solid #007bff;
+border-radius: 5px;
+}
+
+.budget-summary h3 {
+font-size: 20px;
+margin-bottom: 10px;
+color: #333;
+}
+
+.budget-summary p {
+margin: 5px 0;
+font-size: 16px;
+color: #444;
+}
+
+/* Expenses list styling */
+.expenses-list {
+padding: 15px;
+background-color: #ffffff;
+border: 1px solid #ddd;
+border-radius: 5px;
+}
+
+.expenses-list h4 {
+font-size: 18px;
+font-weight: bold;
+margin-bottom: 10px;
+color: #333;
+}
+
+.expenses-list ul {
+list-style-type: none;
+padding: 0;
+}
+
+.expenses-list li {
+font-size: 16px;
+margin: 5px 0;
+padding: 8px;
+background-color: #f9f9f9;
+border: 1px solid #ddd;
+border-radius: 5px;
+}
+
+.expenses-list li:nth-child(odd) {
+background-color: #f3f3f3;
+}
+
+/* Empty expenses message */
+.expenses-list p {
+color: #888;
+font-style: italic;
+margin: 0;
+font-size: 14px;
+text-align: center;
+}
+.add-expense-button {
+display: inline-block;
+background-color: #b0b0b0; /* Grey color */
+color: white;
+font-size: 16px;
+font-weight: bold;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease, box-shadow 0.3s ease;
+height:30px;
+background-color:grey;
+}
+
+.add-expense-button:hover {
+background-color:black; /* Darker grey on hover */
+}
+
+.add-expense-button:focus {
+outline: none;
+box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+background-color: #7a7a7a; /* Slightly darker grey when focused */
+}
+
+.add-expense-button:active {
+background-color: #6b6b6b; /* Even darker grey when clicked */
+box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+/* General container styling */
+.feedback-container {
+max-width: 600px;
+margin: 0 auto;
+padding: 20px;
+background-color: #f9f9f9; /* Light grey background */
+border-radius: 8px;
+box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+font-family: Arial, sans-serif;
+}
+
+/* Title styling */
+.feedback-container h1 {
+font-size: 24px;
+color: #333;
+text-align: center;
+margin-bottom: 20px;
+}
+
+/* Form styling */
+.feedback-form {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+.feedback-form label {
+font-size: 16px;
+font-weight: bold;
+color: #555;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+font-size: 14px;
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus {
+border-color: #007bff; /* Blue border on focus */
+outline: none;
+box-shadow: 0 0 4px rgba(0, 123, 255, 0.4); /* Blue glow */
+}
+
+.feedback-form textarea {
+height: 100px;
+resize: none; /* Prevent resizing */
+}
+
+/* Submit button styling */
+.feedback-form button {
+padding: 10px 20px;
+background-color:grey; /* Blue button */
+color: white;
+font-size: 16px;
+font-weight: bold;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.feedback-form button:hover {
+background-color:black; /* Darker blue on hover */
+}
+
+.feedback-form button:active {
+transform: scale(0.98); /* Slight press-down effect */
+}
+
+/* Feedback list styling */
+.feedback-list {
+margin-top: 30px;
+}
+
+.feedback-list h2 {
+font-size: 20px;
+color: #333;
+border-bottom: 2px solid black;
+display: inline-block;
+margin-bottom: 15px;
+}
+
+.feedback-list ul {
+list-style: none;
+padding: 0;
+}
+
+.feedback-list ul li {
+background-color: #fff;
+border: 1px solid #ccc;
+border-radius: 5px;
+padding: 10px 15px;
+margin-bottom: 10px;
+font-size: 14px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Slight shadow */
+}
+
+.feedback-list ul li strong {
+color: #007bff; /* Blue for the place name */
+font-weight: bold;
+
+}
+
+.submit-feedback{
+height:30px;
+
+}
+
+.title-main{
+color:white;
+font-size:4rem;
+}
+.budget-container{
+margin-top:0%;
+
+height:100%;
+max-height: max-content;
+}
+.buddd{
+background-color:black;
+}
+.budget-container h2{
+text-align:center;
+}
+.addex{
+height:40px;
+font-size:1rem
+}
+.saveex{
+height:30px;
+font-size:1rem
+
+}
+.budget-container h3{
+padding:2.5%
+}
