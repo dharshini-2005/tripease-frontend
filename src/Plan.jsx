@@ -1,123 +1,159 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-
-const API_BASE_URL = "http://localhost:5000";
+import Navbar from "./Navbar";
+import BASE_URL from "./config";
 
 const Plan = () => {
   const [source, setSource] = useState("");
   const [destination, setDestination] = useState("");
   const [date, setDate] = useState("");
-  const [plans, setPlans] = useState([]); 
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [toast, setToast] = useState(null);
 
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
 
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/plans`);
+        const response = await axios.get(`${BASE_URL}/plans`);
         setPlans(response.data);
-      } catch (error) {
-        console.error("Error fetching plans:", error);
+      } catch {
+        showToast("Could not load plans.", "error");
+      } finally {
+        setLoading(false);
       }
     };
     fetchPlans();
   }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!source || !destination || !date) {
-      alert("All fields are required!");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!source.trim() || !destination.trim() || !date) {
+      showToast("All fields are required.", "error");
       return;
     }
-
-
-    const newPlan = { source, destination, date };
-
+    setSubmitting(true);
+    const newPlan = { source: source.trim(), destination: destination.trim(), date };
     try {
-      
-      const response = await axios.post(`${API_BASE_URL}/plans`, newPlan);
-      console.log("Plan saved:", response.data);
-
-    
-      setPlans([...plans, newPlan]);
-
-
+      await axios.post(`${BASE_URL}/plans`, newPlan);
+      setPlans([newPlan, ...plans]);
       setSource("");
       setDestination("");
       setDate("");
-    } catch (error) {
-      console.error("Error saving plan:", error);
-      alert("Plan not added. Server issue!");
+      showToast("Trip plan created! 🗺️");
+    } catch {
+      showToast("Failed to save plan. Try again.", "error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  
-  const backgroundImageStyle = {
-    backgroundImage: 'url("https://i.pinimg.com/736x/33/63/21/3363219f117127d8423bc28d88043425.jpg")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "100vh",
-    width: "100vw",
-  };
-  
+  const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div style={backgroundImageStyle}>
-    <div style={backgroundImageStyle}>
-      <h2 className="plan">Create Travel Plan</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Source:</label>
-          <div className="source-btn">
-            <input
-              type="text"
-              value={source}
-              onChange={(e) => setSource(e.target.value)}
-              placeholder="Enter Source"
-              required
-            />
+    <div className="content-page">
+      <Navbar />
+      <div className="content-inner">
+        <div className="page-header">
+          <h2>🗺️ Travel Plans</h2>
+          <p>Plan your next adventure with source, destination and travel date.</p>
+        </div>
+
+        {/* Create Plan Form */}
+        <div className="card">
+          <div className="card-title">✏️ Create New Plan</div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-row">
+              <div className="form-group">
+                <label>From</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Mumbai"
+                  value={source}
+                  onChange={(e) => setSource(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>To</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Goa"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Travel Date</label>
+              <input
+                type="date"
+                value={date}
+                min={today}
+                onChange={(e) => setDate(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-filled btn-full" disabled={submitting}>
+              {submitting ? "Saving..." : "✈️ Create Plan"}
+            </button>
+          </form>
+        </div>
+
+        {/* Plans List */}
+        <div className="card">
+          <div className="card-title">
+            📋 Your Plans
+            <span className="badge badge-primary" style={{ marginLeft: "auto" }}>{plans.length}</span>
+          </div>
+
+          {loading ? (
+            <div className="loading-wrap"><div className="spinner" /></div>
+          ) : plans.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">🧳</div>
+              <p>No plans yet. Create your first trip above!</p>
+            </div>
+          ) : (
+            <div className="plan-list">
+              {plans.map((plan, index) => (
+                <div className="plan-item" key={index}>
+                  <div className="plan-item-info">
+                    <div className="plan-route">
+                      {plan.source}
+                      <span style={{ color: "var(--primary)" }}>→</span>
+                      {plan.destination}
+                    </div>
+                    <div className="plan-date">
+                      📅{" "}
+                      {new Date(plan.date).toLocaleDateString("en-IN", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </div>
+                  </div>
+                  <span className="badge badge-primary">Planned</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {toast && (
+        <div className="toast-container">
+          <div className={`toast toast-${toast.type}`}>
+            {toast.type === "success" ? "✅" : "❌"} {toast.message}
           </div>
         </div>
-
-        <label>Destination:</label>
-        <div className="destination-btn">
-          <input
-            type="text"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-            placeholder="Enter Destination"
-            required
-            className="Destination"
-          />
-        </div>
-
-        <label>Date:</label>
-        <div className="date-btn">
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-            className="date"
-          />
-        </div>
-
-        <div className="submit-place">
-          <button type="submit" className="plan-created">Create Plan</button>
-        </div>
-      </form>
-
-      <h3 className="created">Created Travel Plans</h3>
-      <ul>
-        {plans.map((plan, index) => (
-          <li key={index}>
-            <strong>Source:</strong> {plan.source} <br />
-            <strong>Destination:</strong> {plan.destination} <br />
-            <strong>Date:</strong> {plan.date}
-          </li>
-        ))}
-      </ul>
-    </div>
+      )}
     </div>
   );
 };

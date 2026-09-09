@@ -1,19 +1,13 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-import { useEffect, useState } from "react";
-import axios from "axios";
-
 import Login from "./Login";
 import Options from "./Options";
 import Checklist from "./Checklist";
 import Feedback from "./Feedback";
 import Plan from "./Plan";
-import Budget from "./Budget";   
-
+import Budget from "./Budget";
+import Destination from "./Destination";
 
 const App = () => {
-
-  
   return (
     <Router>
       <Routes>
@@ -21,9 +15,9 @@ const App = () => {
         <Route path="/options" element={<Options />} />
         <Route path="/checklists" element={<Checklist />} />
         <Route path="/feedbacks" element={<Feedback />} />
-        <Route path="/budget" element={<Budget />} /> {/* Add Budget route */}
-        <Route path="/plan" element={<Plan/>}/>
-
+        <Route path="/budget" element={<Budget />} />
+        <Route path="/plan" element={<Plan />} />
+        <Route path="/destination" element={<Destination />} />
       </Routes>
     </Router>
   );

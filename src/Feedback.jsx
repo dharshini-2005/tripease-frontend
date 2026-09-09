@@ -1,99 +1,209 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Navbar from "./Navbar";
+import BASE_URL from "./config";
 
-const API_BASE_URL = "http://localhost:5000";
+const StarRating = ({ value, onChange }) => {
+  const [hovered, setHovered] = useState(0);
+  return (
+    <div className="star-rating">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <span
+          key={star}
+          className={`star${star <= (hovered || value) ? " active" : ""}`}
+          onClick={() => onChange(star)}
+          onMouseEnter={() => setHovered(star)}
+          onMouseLeave={() => setHovered(0)}
+        >
+          ★
+        </span>
+      ))}
+    </div>
+  );
+};
+
+const ratingLabel = (r) => {
+  const labels = { 1: "😞 Poor", 2: "😐 Fair", 3: "🙂 Good", 4: "😊 Great", 5: "🤩 Excellent" };
+  return labels[r] || "";
+};
+
+const renderStars = (r) => "★".repeat(r || 0) + "☆".repeat(5 - (r || 0));
 
 const Feedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [feedback, setFeedback] = useState("");
   const [place, setPlace] = useState("");
+  const [rating, setRating] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const [toast, setToast] = useState(null);
 
-  useEffect(() => {
-    fetchFeedbacks();
-  }, []);
-
-  const fetchFeedbacks = async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/feedbacks`);
-      setFeedbacks(response.data);
-    } catch (error) {
-      console.error("Error fetching feedbacks:", error);
-    }
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const handlePlaceChange = (e) => setPlace(e.target.value);
-  const handleFeedbackChange = (e) => setFeedback(e.target.value);
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/feedbacks`)
+      .then((res) => setFeedbacks(res.data))
+      .catch(() => showToast("Could not load feedbacks.", "error"))
+      .finally(() => setLoading(false));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (place.trim() && feedback.trim()) {
-      const newFeedback = { place, feedback };
-
-      try {
-        // Send data to backend
-        await axios.post(`${API_BASE_URL}/feedbacks`, newFeedback);
-        setFeedbacks([...feedbacks, newFeedback]); // Update state
-        setPlace("");
-        setFeedback("");
-      } catch (error) {
-        console.error("Error submitting feedback:", error);
-        alert("Failed to submit feedback.");
-      }
+    if (!place.trim() || !feedback.trim()) {
+      showToast("Fill in place and feedback.", "error");
+      return;
+    }
+    if (rating === 0) {
+      showToast("Please select a rating.", "error");
+      return;
+    }
+    setSubmitting(true);
+    const newFeedback = { place: place.trim(), feedback: feedback.trim(), rating };
+    try {
+      await axios.post(`${BASE_URL}/feedbacks`, newFeedback);
+      setFeedbacks([newFeedback, ...feedbacks]);
+      setPlace("");
+      setFeedback("");
+      setRating(0);
+      showToast("Feedback submitted! ⭐");
+    } catch {
+      showToast("Failed to submit feedback.", "error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const backgroundImageStyle = {
-    backgroundImage: 'url("https://thumbs.dreamstime.com/b/feedback-direction-chalkboard-concept-arrows-66656367.jpg")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "100vh",
-    width: "100vw",
-  };
+  const avgRating =
+    feedbacks.length > 0
+      ? (feedbacks.reduce((sum, f) => sum + (f.rating || 0), 0) / feedbacks.length).toFixed(1)
+      : null;
+
+  const filtered =
+    filter === "all"
+      ? feedbacks
+      : feedbacks.filter((f) => f.rating === parseInt(filter));
+
   return (
-    <div style={backgroundImageStyle}>
-    <div className="feedback-container">
-      <h1>Feedback Page</h1>
-      <form onSubmit={handleSubmit} className="feedback-form">
-        <label htmlFor="place">Place:</label>
-        <input
-          type="text"
-          id="place"
-          placeholder="Enter the place you visited"
-          value={place}
-          onChange={handlePlaceChange}
-          required
-        />
+    <div className="content-page">
+      <Navbar />
+      <div className="content-inner">
+        <div className="page-header">
+          <h2>⭐ Travel Feedback</h2>
+          <p>Rate places you've visited and share your experience with fellow travellers.</p>
+        </div>
 
-        <label htmlFor="feedback">Feedback:</label>
-        <textarea
-          id="feedback"
-          placeholder="Write your feedback about the place"
-          value={feedback}
-          onChange={handleFeedbackChange}
-          required
-        ></textarea>
-
-        <button type="submit" className="submit-feedback">
-          Submit Feedback
-        </button>
-      </form>
-
-      <div className="feedback-list">
-        <h2>Feedbacks:</h2>
-        {feedbacks.length > 0 ? (
-          <ul>
-            {feedbacks.map((entry, index) => (
-              <li key={index}>
-                <strong>{entry.place}:</strong> {entry.feedback}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No feedbacks submitted yet.</p>
+        {/* Stats */}
+        {feedbacks.length > 0 && (
+          <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+            <div className="card" style={{ flex: 1, minWidth: "140px", textAlign: "center", padding: "1.2rem" }}>
+              <div style={{ fontSize: "2rem", fontWeight: 800, color: "var(--primary)" }}>{feedbacks.length}</div>
+              <div style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>Total Reviews</div>
+            </div>
+            <div className="card" style={{ flex: 1, minWidth: "140px", textAlign: "center", padding: "1.2rem" }}>
+              <div style={{ fontSize: "2rem", fontWeight: 800, color: "var(--warning)" }}>{avgRating} ★</div>
+              <div style={{ color: "var(--text-muted)", fontSize: "0.88rem" }}>Average Rating</div>
+            </div>
+          </div>
         )}
+
+        {/* Submit Feedback */}
+        <div className="card">
+          <div className="card-title">✍️ Write a Review</div>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Place Visited</label>
+              <input
+                type="text"
+                placeholder="e.g. Taj Mahal, Agra"
+                value={place}
+                onChange={(e) => setPlace(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Your Rating</label>
+              <StarRating value={rating} onChange={setRating} />
+              {rating > 0 && (
+                <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.3rem" }}>
+                  {ratingLabel(rating)}
+                </div>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Your Experience</label>
+              <textarea
+                placeholder="Tell others about your experience at this place..."
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn btn-filled btn-full" disabled={submitting}>
+              {submitting ? "Submitting..." : "🚀 Submit Review"}
+            </button>
+          </form>
+        </div>
+
+        {/* Filter + Reviews */}
+        <div className="card">
+          <div className="card-title" style={{ flexWrap: "wrap", gap: "0.6rem" }}>
+            🗣️ Reviews
+            <span className="badge badge-primary" style={{ marginLeft: "auto" }}>{filtered.length}</span>
+          </div>
+
+          {/* Filter Tabs */}
+          <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+            {["all", "5", "4", "3", "2", "1"].map((f) => (
+              <button
+                key={f}
+                className={`btn btn-sm ${filter === f ? "btn-filled" : "btn-outline"}`}
+                onClick={() => setFilter(f)}
+              >
+                {f === "all" ? "All" : `${f} ★`}
+              </button>
+            ))}
+          </div>
+
+          {loading ? (
+            <div className="loading-wrap"><div className="spinner" /></div>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">💬</div>
+              <p>No reviews yet. Be the first to share your experience!</p>
+            </div>
+          ) : (
+            filtered.map((entry, index) => (
+              <div className="feedback-item" key={index}>
+                <div className="feedback-item-place">
+                  📍 {entry.place}
+                </div>
+                {entry.rating && (
+                  <div className="feedback-item-stars">
+                    {renderStars(entry.rating)}{" "}
+                    <span style={{ color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                      {ratingLabel(entry.rating)}
+                    </span>
+                  </div>
+                )}
+                <div className="feedback-item-text">{entry.feedback}</div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+
+      {toast && (
+        <div className="toast-container">
+          <div className={`toast toast-${toast.type}`}>
+            {toast.type === "success" ? "✅" : "❌"} {toast.message}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,124 +1,123 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-const API_BASE_URL = "http://localhost:5000";
+import Navbar from "./Navbar";
+import BASE_URL from "./config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isRegister, setIsRegister] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-
- 
   const toggleForm = () => {
     setIsRegister(!isRegister);
-    setErrorMessage(""); 
+    setErrorMessage("");
+    setSuccessMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage(""); 
+    setErrorMessage("");
+    setSuccessMessage("");
+    setLoading(true);
 
-    if (isRegister) {
-      
-      try {
-        const response = await axios.post(`${API_BASE_URL}/register`, {
-          username,
-          email,
-          password,
-        });
+    try {
+      if (isRegister) {
+        const response = await axios.post(`${BASE_URL}/register`, { username, email, password });
         if (response.status === 201) {
-          alert("Registration successful!");
-          setIsRegister(false); 
+          setSuccessMessage("Account created! Please log in.");
+          setIsRegister(false);
+          setEmail("");
+          setPassword("");
+          setUsername("");
         }
-      } catch (error) {
-        const message = error.response ? error.response.data.error : "Registration failed! Please try again.";
-        setErrorMessage(message); 
-      }
-    } else {
-      
-      try {
-        const response = await axios.post(`${API_BASE_URL}/login`, {
-          email,
-          password,
-        });
-
+      } else {
+        const response = await axios.post(`${BASE_URL}/login`, { email, password });
         if (response.data.token) {
-         
           localStorage.setItem("authToken", response.data.token);
-          alert("Login successful!");
           navigate("/options");
         } else {
-          setErrorMessage("Invalid email or password!");
+          setErrorMessage("Invalid email or password.");
         }
-      } catch (error) {
-        setErrorMessage("Invalid email or password!"); 
       }
+    } catch (error) {
+      const msg = error.response?.data?.error || (isRegister ? "Registration failed." : "Invalid email or password.");
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const backgroundImageStyle = {
-    backgroundImage: 'url("https://images.unsplash.com/photo-1627666259356-03a116b7dde9?fm=jpg")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    height: "100vh",
-    width: "100vw",
-  };
-
   return (
-    <div className="login-form" style={backgroundImageStyle}>
-      <h1 className="title-main">TripEase</h1>
-      <h2 className="slogan">Your Journey Your Story</h2>
-      <h2 className="login">{isRegister ? "Register" : "Login"}</h2>
+    <div className="hero-section">
+      <Navbar />
+      <div className="hero-bg" />
+      <div className="hero-overlay" />
+      <div className="hero-content">
+        <div className="hero-badge">🌍 Travel Smarter</div>
+        <h1 className="hero-title">
+          Trip<span className="highlight">Ease</span>
+        </h1>
+        <p className="hero-slogan">Your Journey, Your Story — Plan it beautifully.</p>
 
-      <form onSubmit={handleSubmit} className="form-elements">
-        {isRegister && (
-          <div>
-            <label>Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={handleUsernameChange}
-              required
-            />
+        <div className="auth-card">
+          <h2 className="auth-title">{isRegister ? "Create Account" : "Welcome Back"}</h2>
+
+          {errorMessage && <div className="error-banner">{errorMessage}</div>}
+          {successMessage && <div className="success-banner">{successMessage}</div>}
+
+          <form onSubmit={handleSubmit}>
+            {isRegister && (
+              <div className="auth-field">
+                <label>Username</label>
+                <input
+                  type="text"
+                  placeholder="Your name"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+            <div className="auth-field">
+              <label>Email</label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="auth-field">
+              <label>Password</label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? "Please wait..." : isRegister ? "Create Account" : "Sign In"}
+            </button>
+          </form>
+
+          <div className="auth-switch">
+            {isRegister ? (
+              <>Already have an account?{" "}<span onClick={toggleForm}>Sign in</span></>
+            ) : (
+              <>Don't have an account?{" "}<span onClick={toggleForm}>Register</span></>
+            )}
           </div>
-        )}
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            required
-          />
         </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-            required
-          />
-        </div>
-        <button type="submit" className="login-button">
-          {isRegister ? "Register" : "Login"}
-        </button>
-      </form>
-
-     
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      <p onClick={toggleForm} className="toggle-form">
-        {isRegister ? "Already have an account? Login" : "Don't have an account? Register"}
-      </p>
+      </div>
     </div>
   );
 };
